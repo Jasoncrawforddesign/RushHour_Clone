@@ -68,6 +68,11 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        else if (Input.GetMouseButtonUp(0) && haveSelected == true)
+        {
+            objectToMove.GetComponent<CubeMovement>().snapTo();
+
+        }
         else if (Input.GetMouseButton(0) && haveSelected == true)
         {
             float newZ = 0;
@@ -91,17 +96,13 @@ public class GameController : MonoBehaviour
             mouseWorldPos = cam.ScreenToWorldPoint(mousePos);
             //Debug.Log(mouseWorldPos);
 
-            objectToMove.GetComponent<CubeMovement>().moveTo(mouseWorldPos, this.gameObject);
+           objectToMove.GetComponent<CubeMovement>().moveTo(mouseWorldPos, this.gameObject);
+
         }
        
-        if (Input.GetMouseButtonUp(0) && haveSelected == true)
-        {
-            objectToMove.GetComponent<CubeMovement>().snapTo();
-           
-        }
         
     }
-
+    
 
     public void removeObject()
     {

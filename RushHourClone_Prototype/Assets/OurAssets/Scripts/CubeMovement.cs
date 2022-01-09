@@ -16,13 +16,23 @@ public class CubeMovement : MonoBehaviour
     private bool forwardMoveEnabled = true;
     private bool backwardMoveEnabled = true;
 
+    private bool isMoving = false;
+
+    [SerializeField] private LayerMask _anchorLayermask;
+    [SerializeField] private LayerMask _collisionLayermask;
+
     private Vector3 currentAnchorPos;
  
     public int anchorLayer;
 
-    public float snapHitDistance = 1.9f;
+    //private float snapHitDistance = 0.9f;
+    private float stepSpeed = 20;
 
     private Vector3 lastMousePos;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +43,7 @@ public class CubeMovement : MonoBehaviour
     {
         //snapTo();
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -40,50 +51,55 @@ public class CubeMovement : MonoBehaviour
         {
             if (moveX == true)
             {
-                int layermask = 1 << 7;
 
                 RaycastHit hitOne;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hitOne, checkCollisionRayLength, layermask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hitOne, checkCollisionRayLength, _collisionLayermask))
                 {
                     leftMoveEnabled = false;
-                    lastMousePos = savedMousePos;
+                    //lastMousePos = savedMousePos;
+                    Debug.Log("2"+ hitOne.collider.gameObject.name);
                     // Debug.Log("HIT SOMETHING STOPPP!!");
                 }
 
                 RaycastHit hitTwo;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hitTwo, checkCollisionRayLength, layermask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hitTwo, checkCollisionRayLength, _collisionLayermask))
                 {
                     rightMoveEnabled = false;
-                    lastMousePos = savedMousePos;
+                    //lastMousePos = savedMousePos;
+                    Debug.Log("1 " + hitTwo.collider.gameObject.name);
                     // Debug.Log("HIT SOMETHING STOPPP!!");
                 }
             }
 
             if (moveX == false)
             {
-                int layermask = 1 << 7;
 
                 RaycastHit hitOne;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitOne, checkCollisionRayLength, layermask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitOne, checkCollisionRayLength, _collisionLayermask))
                 {
+                    Debug.Log("3 "+ hitOne.collider.gameObject.name);
                     forwardMoveEnabled = false;
                     lastMousePos = savedMousePos;
                     // Debug.Log("HIT SOMETHING STOPPP!!");
                 }
 
                 RaycastHit hitTwo;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.back), out hitTwo, checkCollisionRayLength, layermask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.back), out hitTwo, checkCollisionRayLength, _collisionLayermask))
                 {
                     backwardMoveEnabled = false;
                     lastMousePos = savedMousePos;
+                    Debug.Log("4" + hitTwo.collider.gameObject.name);
                     // Debug.Log("HIT SOMETHING STOPPP!!");
                 }
             }
         }
     }
 
+   
+    // moveTo Function
     public void moveTo(Vector3 mousePos, GameObject actualGameController)
     {
+        isMoving = true;
         checkCollision = true;
         if(gameController == null)
         {
@@ -101,8 +117,9 @@ public class CubeMovement : MonoBehaviour
             {
                 if (savedMousePos.x > transform.position.x)
                 {
-                   
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3 (mousePos.x, objectPos.y, objectPos.z), 0.1f);
+
+                    //transform.position = new Vector3(mousePos.x, objectPos.y, objectPos.z);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3 (mousePos.x, objectPos.y, objectPos.z), stepSpeed * Time.deltaTime);
 
                     leftMoveEnabled = true;
                 }
@@ -112,15 +129,17 @@ public class CubeMovement : MonoBehaviour
             {
                 if(savedMousePos.x < transform.position.x)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, objectPos.y, objectPos.z), 0.1f);
+                    //transform.position = new Vector3(mousePos.x, objectPos.y, objectPos.z);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, objectPos.y, objectPos.z), stepSpeed * Time.deltaTime);
 
                     rightMoveEnabled = true;
                 }
             }
 
-            else if(leftMoveEnabled == true && rightMoveEnabled == true)
+            else
             {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, objectPos.y, objectPos.z), 0.1f);
+                //transform.position = new Vector3(mousePos.x, objectPos.y, objectPos.z);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, objectPos.y, objectPos.z), stepSpeed * Time.deltaTime);
             }
             
             
@@ -131,8 +150,8 @@ public class CubeMovement : MonoBehaviour
             {
                 if (savedMousePos.z < transform.position.z)
                 {
-
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), 0.1f);
+                    //transform.position = new Vector3(objectPos.x, objectPos.y, mousePos.z);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), stepSpeed * Time.deltaTime);
 
                     forwardMoveEnabled = true;
                 }
@@ -142,21 +161,166 @@ public class CubeMovement : MonoBehaviour
             {
                 if (savedMousePos.z > transform.position.z)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), 0.1f);
+                    
+                    //transform.position = new Vector3(objectPos.x, objectPos.y, mousePos.z);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), stepSpeed * Time.deltaTime);
 
                     backwardMoveEnabled = true;
                 }
             }
 
-            else if (leftMoveEnabled == true && rightMoveEnabled == true)
+            else
             {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), 0.1f);
+                //transform.position = new Vector3(objectPos.x, objectPos.y, mousePos.z);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(objectPos.x, objectPos.y, mousePos.z), stepSpeed * Time.deltaTime);
             }
 
         }
-       
+        isMoving = false;
     }
 
+
+    // LATEST snapTo Function
+    public void snapTo()
+    {
+        if (isMoving == false)
+        {
+            if (moveX == true)
+            {
+                float halfObject = this.gameObject.transform.localScale.x / 2;
+
+                bool didOneHit = false;
+                bool didTwoHit = false;
+
+                RaycastHit hitOne;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hitOne, halfObject, _anchorLayermask))
+                {
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hitOne.distance, Color.green, 2f);
+                    // Debug.Log("hitOne Distance: " + hitOne.distance);
+                    didOneHit = true;
+                }
+
+                RaycastHit hitTwo;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hitTwo, halfObject, _anchorLayermask))
+                {
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * hitTwo.distance, Color.red, 2f);
+                    //Debug.Log("hitTwo Distance: " + hitTwo.distance);
+                    didTwoHit = true;
+                }
+
+                if (didOneHit == true && didTwoHit == true)
+                {
+                    Debug.Log("Hit Right and Left");
+                    if (hitOne.distance < hitTwo.distance && rightMoveEnabled == true)
+                    {
+                        transform.position = hitOne.transform.position;
+                    }
+                    else if (hitTwo.distance < hitOne.distance && leftMoveEnabled == true)
+                    {
+                        transform.position = hitTwo.transform.position;
+                    }
+                    else
+                    {
+                        this.gameObject.transform.position = currentAnchorPos;
+                    }
+                }
+                else if (didOneHit == true && didTwoHit == false && rightMoveEnabled == true)
+                {
+                    transform.position = hitOne.transform.position;
+                }
+                else if (didTwoHit == true && didOneHit == false && leftMoveEnabled == true)
+                {
+                    transform.position = hitTwo.transform.position;
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
+                }
+                currentAnchorPos = this.gameObject.transform.position;
+
+            }
+
+            if (moveX == false)
+            {
+                float halfObject = this.gameObject.transform.localScale.z / 2;
+
+                bool didOneHit = false;
+                bool didTwoHit = false;
+
+                RaycastHit hitOne;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitOne, halfObject, _anchorLayermask))
+                {
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitOne.distance, Color.green, 2f);
+                    // Debug.Log("hitOne Distance: " + hitOne.distance);
+                    didOneHit = true;
+                }
+
+                RaycastHit hitTwo;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.back), out hitTwo, halfObject, _anchorLayermask))
+                {
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.back) * hitTwo.distance, Color.red, 2f);
+                    //Debug.Log("hitTwo Distance: " + hitTwo.distance);
+                    didTwoHit = true;
+                }
+
+                if (didOneHit == true && didTwoHit == true)
+                {
+                    Debug.Log("Hit Right and Left");
+                    if (hitOne.distance < hitTwo.distance && forwardMoveEnabled == true)
+                    {
+                        transform.position = hitOne.transform.position;
+                    }
+                    else if (hitTwo.distance < hitOne.distance && backwardMoveEnabled == true)
+                    {
+                        Debug.Log("WHOOPSIE");
+                        transform.position = hitTwo.transform.position;
+                    }
+                    else
+                    {
+                        this.gameObject.transform.position = currentAnchorPos;
+                    }
+                }
+                else if (didOneHit == true && didTwoHit == false && forwardMoveEnabled == true)
+                {
+                    transform.position = hitOne.transform.position;
+                }
+                else if (didTwoHit == true && didOneHit == false && backwardMoveEnabled == true)
+                {
+                    transform.position = hitTwo.transform.position;
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
+                }
+                currentAnchorPos = this.gameObject.transform.position;
+            }
+
+
+
+            // this.gameObject.transform.position = currentAnchorPos;
+
+           // currentAnchorPos = this.gameObject.transform.position;
+
+            if (gameController)
+            {
+                gameController.GetComponent<GameController>().removeObject();
+            }
+
+            checkCollision = false;
+
+            forwardMoveEnabled = true;
+            backwardMoveEnabled = true;
+            rightMoveEnabled = true;
+            leftMoveEnabled = true;
+            // send 2 rays casts out, either y+/y- or x+/x-
+            // whichever ray is closest to a snapping sphere move gameobject to that.
+        }
+    }
+
+
+
+    //------------------- OLD SNAP FUNCTION BELOW----------------------
+    /*
     public void snapTo()
     {
         
@@ -167,21 +331,20 @@ public class CubeMovement : MonoBehaviour
             bool didOneHit = false;
             bool didTwoHit = false;
 
-            int layermask = 1 << anchorLayer;
 
             RaycastHit hitOne;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitOne, (halfObject + 0.2f), layermask))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitOne, Mathf.Infinity, _anchorLayermask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hitOne.distance, Color.green, 2f);
-                //Debug.Log("Did Hit One");
+                
                 didOneHit = true;
             }
 
             RaycastHit hitTwo;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.back), out hitTwo, (halfObject + 0.2f), layermask))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.back), out hitTwo, Mathf.Infinity, _anchorLayermask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.back) * hitTwo.distance, Color.red, 2f);
-                // Debug.Log("Did Hit Two");
+                Debug.Log(hitTwo.collider.gameObject.layer);
                 didTwoHit = true;
             }
 
@@ -200,20 +363,34 @@ public class CubeMovement : MonoBehaviour
                     {
                         this.gameObject.transform.position = hitTwo.transform.position;
                     }
+                    else
+                    {
+                        this.gameObject.transform.position = currentAnchorPos;
+                    }
+
                 }
+
             }
-            else if (didOneHit == true)
+            else if (didOneHit == true && didTwoHit == false)
             {
                 if (hitOne.distance < snapHitDistance)
                 {
                     this.gameObject.transform.position = hitOne.transform.position;
                 }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
+                }
             }
-            else if (didTwoHit == true)
+            else if (didTwoHit == true && didOneHit == false)
             {
                 if (hitTwo.distance < snapHitDistance)
                 {
                     this.gameObject.transform.position = hitTwo.transform.position;
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
                 }
             }
             else
@@ -231,10 +408,9 @@ public class CubeMovement : MonoBehaviour
 
             bool didOneHit = false;
             bool didTwoHit = false;
-            int layermask = 1 << anchorLayer;
 
             RaycastHit hitOne;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hitOne, (halfObject + 0.2f), layermask))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hitOne, Mathf.Infinity, _anchorLayermask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hitOne.distance, Color.green, 2f);
                // Debug.Log("hitOne Distance: " + hitOne.distance);
@@ -242,7 +418,7 @@ public class CubeMovement : MonoBehaviour
             }
 
             RaycastHit hitTwo;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hitTwo,(halfObject + 0.2f), layermask))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hitTwo, Mathf.Infinity, _anchorLayermask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.left) * hitTwo.distance, Color.red, 2f);
                 //Debug.Log("hitTwo Distance: " + hitTwo.distance);
@@ -258,14 +434,18 @@ public class CubeMovement : MonoBehaviour
                     if (hitOne.distance < hitTwo.distance)
                     {
                         this.gameObject.transform.position = hitOne.transform.position;
-                       // Debug.Log("If 1");
+                   
 
                     }
                     else if (hitOne.distance > hitTwo.distance)
                     {
                         this.gameObject.transform.position = hitTwo.transform.position;
-                        //Debug.Log("If 2");
+                     
                     }
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
                 }
             }
             else if(didOneHit == true)
@@ -273,7 +453,11 @@ public class CubeMovement : MonoBehaviour
                 if (hitOne.distance < snapHitDistance)
                 {
                     this.gameObject.transform.position = hitOne.transform.position;
-                    //Debug.Log("If 3");
+                    
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
                 }
             }
             else if(didTwoHit == true)
@@ -281,7 +465,11 @@ public class CubeMovement : MonoBehaviour
                 if (hitTwo.distance < snapHitDistance)
                 {
                     this.gameObject.transform.position = hitTwo.transform.position;
-                    //Debug.Log("If 4");
+
+                }
+                else
+                {
+                    this.gameObject.transform.position = currentAnchorPos;
                 }
             }
             else
@@ -290,6 +478,8 @@ public class CubeMovement : MonoBehaviour
             }
             
         }
+        
+        this.gameObject.transform.position = currentAnchorPos;
 
         currentAnchorPos = this.gameObject.transform.position;
 
@@ -307,9 +497,7 @@ public class CubeMovement : MonoBehaviour
         // send 2 rays casts out, either y+/y- or x+/x-
         // whichever ray is closest to a snapping sphere move gameobject to that.
     }
+    */ 
+   //---------------------------------------------------------------------
 
-    void checkForOtherObjects()
-    {
-        //send a small raycast out from both ends that check to see if we shouldn't move any further, eg hit another object or reached border.
-    }
 }

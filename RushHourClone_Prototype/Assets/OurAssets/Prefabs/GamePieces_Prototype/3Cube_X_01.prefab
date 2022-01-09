@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4757987826311687061}
   - component: {fileID: 4757987826311687062}
   - component: {fileID: 4757987826311687063}
+  - component: {fileID: -1464813280857173992}
   m_Layer: 7
   m_Name: 3Cube_X_01
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4757987826311687056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.082871, y: 9.918627, z: -7.457255}
-  m_LocalScale: {x: 5.4, y: 1, z: 1}
+  m_LocalScale: {x: 5.4, y: 1, z: 1.2}
   m_Children:
   - {fileID: 1215682817096531913}
   m_Father: {fileID: 0}
@@ -112,8 +113,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveX: 1
   checkCollisionRayLength: 3.2
+  _anchorLayermask:
+    serializedVersion: 2
+    m_Bits: 2048
+  _collisionLayermask:
+    serializedVersion: 2
+    m_Bits: 128
   anchorLayer: 11
-  snapHitDistance: 2.8
+--- !u!54 &-1464813280857173992
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4757987826311687056}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1681039383687911458
 PrefabInstance:
   m_ObjectHideFlags: 0

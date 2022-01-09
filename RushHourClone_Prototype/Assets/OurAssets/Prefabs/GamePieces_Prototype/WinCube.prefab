@@ -27,9 +27,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8792560040538599867}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.902871, y: 9.918627, z: -9.517255}
-  m_LocalScale: {x: 3.6, y: 1, z: 1}
+  m_LocalScale: {x: 3.6, y: 1, z: 1.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -110,6 +110,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveX: 1
-  checkCollisionRayLength: 2
+  checkCollisionRayLength: 2.1
+  _anchorLayermask:
+    serializedVersion: 2
+    m_Bits: 8192
+  _collisionLayermask:
+    serializedVersion: 2
+    m_Bits: 128
   anchorLayer: 13
-  snapHitDistance: 1.9

@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - AnchorX_Small
+  - AnchorZ_Small
+  - AnchorX_Large
+  - AnchorZ_Large
+  - AnchorX_Player
   layers:
   - Default
   - TransparentFX
